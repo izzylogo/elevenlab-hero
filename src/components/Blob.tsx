@@ -83,13 +83,13 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
 
   // Higher resolution for the dense dot pattern
   const originalPositions = useMemo(() => {
-    const geo = new THREE.SphereGeometry(1.8, 128, 128);
+    const geo = new THREE.SphereGeometry(1.5, 128, 128);
     return geo.attributes.position.clone();
   }, []);
 
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime() * targetParams.current.speed;
-    
+
     // Animation logic for enter/exit
     if (isPresent) {
       enterProgress.current = THREE.MathUtils.damp(enterProgress.current, 1, 10, delta);
@@ -147,13 +147,13 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
         (targetParams.current as any).currentNoiseAmp = targetParams.current.noiseAmp;
         (targetParams.current as any).currentRidgeAmp = targetParams.current.ridgeAmp;
       }
-      
+
       (targetParams.current as any).currentNoiseAmp = THREE.MathUtils.lerp(
         (targetParams.current as any).currentNoiseAmp,
         targetParams.current.noiseAmp,
         delta * 2
       );
-      
+
       (targetParams.current as any).currentRidgeAmp = THREE.MathUtils.lerp(
         (targetParams.current as any).currentRidgeAmp,
         targetParams.current.ridgeAmp,
@@ -169,7 +169,7 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
         const z = originalPositions.getZ(i);
 
         // Normalize position for noise sampling
-        const len = Math.sqrt(x*x + y*y + z*z);
+        const len = Math.sqrt(x * x + y * y + z * z);
         const nx = x / len;
         const ny = y / len;
         const nz = z / len;
@@ -181,7 +181,7 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
 
         // Main shape distortion
         const n1 = noise3D(nx * 2.0 + warpX * 0.5, ny * 2.0 + warpY * 0.5, nz * 2.0 + warpZ * 0.5);
-        
+
         // Secondary high-frequency ridges
         const n2 = Math.abs(noise3D(nx * 2.0 - t, ny * 2.0, nz * 2.0 + t));
 
@@ -209,7 +209,7 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
         <group ref={groupRef}>
           {/* Deep blue glowing core */}
           <mesh>
-            <sphereGeometry ref={meshGeoRef} args={[1.8, 128, 128]} />
+            <sphereGeometry ref={meshGeoRef} args={[1.5, 128, 128]} />
             <meshPhysicalMaterial
               ref={meshMatRef}
               color={VARIANTS[variant].color}
@@ -226,10 +226,10 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
               opacity={0}
             />
           </mesh>
-          
+
           {/* Dense bright cyan/white dotted surface */}
           <points>
-            <sphereGeometry ref={pointsGeoRef} args={[1.8, 128, 128]} />
+            <sphereGeometry ref={pointsGeoRef} args={[1.5, 128, 128]} />
             <pointsMaterial
               ref={pointsMatRef}
               color={VARIANTS[variant].points}
@@ -245,9 +245,9 @@ export default function Blob({ variant = 'agents' }: BlobProps) {
 
         <ContactShadows
           ref={shadowRef}
-          position={[0, -2.8, 0]}
+          position={[0, -2.4, 0]}
           opacity={0}
-          scale={12}
+          scale={11}
           blur={2.5}
           far={4}
           color={VARIANTS[variant].shadow}
